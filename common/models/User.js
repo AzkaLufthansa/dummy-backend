@@ -30,5 +30,23 @@ module.exports = {
 
     createUser: (user) => {
         return this.model.create(user);
+    },
+
+    findUser: (query) => {
+      return this.model.findOne({
+        where: query,
+      });
+    },
+
+    findAllUsers: (query) => {
+      return this.model.findAll({
+        where: query
+      });
+    },
+  
+    deleteUser: (query) => {
+      return this.model.destroy({
+        where: query
+      });
     }
 };
