@@ -156,4 +156,46 @@ module.exports = {
                 });
             });
     },
+
+    activateBiometric: (req, res) => {
+        const {
+            params: { userId },
+        } = req;
+
+        const { publicKey } = req.body;
+
+        UserModel.activateBiometric({ id: userId }, publicKey)
+            .then((result) => {
+                return res.status(200).json({
+                    status: true,
+                    data: result,
+                });
+            })
+            .catch((err) => {
+                return res.status(500).json({
+                    status: false,
+                    error: err,
+                });
+            })
+    },
+
+    biometricLogin: (req, res) => {
+        const { userId, signature } = req.body;
+        
+        UserModel.biometricLogin(userId, signature)
+            .then((result) => {
+                return res.status(200).json({
+                    status: true,
+                    message: "Authentication successful!",
+                    data: result,
+                });
+            })
+            .catch((err) => {
+                return res.status(500).json({
+                    status: false,
+                    message: "Authentication failed! " + err.message,
+                    error: err,
+                });
+            })
+    }
 }

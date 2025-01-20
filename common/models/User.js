@@ -1,4 +1,5 @@
 const { DataTypes } = require("sequelize");
+const crypto = require('crypto');
 
 const UserModel = {
   id: {
@@ -48,5 +49,42 @@ module.exports = {
       return this.model.destroy({
         where: query
       });
+    },
+
+    activateBiometric: (query, publicKey) => {
+      return this.model.update(
+          { public_key: publicKey },
+          { where: query }
+      );
+    },
+
+    biometricLogin: async (userId, signature) => {
+      try {
+        const signatureBuffer = Buffer.from(signature, 'base64');
+
+        // Query user enrolled public key
+        const user = await this.model.findByPk(userId);
+        if (!user) {
+          throw new Error("User not found");
+        }
+        const publicKey = user.public_key;
+
+        console.log(publicKey)
+
+        // Verify the signature using the public key
+        const verifier = crypto.createVerify('sha256WithRSAEncryption');
+        verifier.update("{'userId':'5'}");
+        verifier.end();
+
+        const isVerified = verifier.verify(publicKey, signatureBuffer, 'base64');
+        if (!isVerified) {
+          throw new Error("Invalid signature");
+        }
+
+        return user;
+      } catch (error) {
+          console.error("Error during biometric login:", error);
+          throw error;
+      }
     }
 };
