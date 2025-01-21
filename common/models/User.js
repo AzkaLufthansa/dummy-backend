@@ -66,11 +66,7 @@ module.exports = {
           throw new Error("User not found");
         }
         const publicKey = user.public_key;
-        const pemKey = `
------BEGIN PUBLIC KEY-----
-${publicKey}
------END PUBLIC KEY-----
-`;
+        const pemKey = "-----BEGIN PUBLIC KEY-----\n" + publicKey + "\n-----END PUBLIC KEY-----";
 
         // Verify the signature using the public key
         const verifier = crypto.createVerify('sha256WithRSAEncryption');
