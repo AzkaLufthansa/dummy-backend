@@ -60,23 +60,24 @@ module.exports = {
 
     biometricLogin: async (userId, signature) => {
       try {
-        const signatureBuffer = Buffer.from(signature, 'base64');
-
         // Query user enrolled public key
         const user = await this.model.findByPk(userId);
         if (!user) {
           throw new Error("User not found");
         }
         const publicKey = user.public_key;
-
-        console.log(publicKey)
+        const pemKey = `
+-----BEGIN PUBLIC KEY-----
+${publicKey}
+-----END PUBLIC KEY-----
+`;
 
         // Verify the signature using the public key
         const verifier = crypto.createVerify('sha256WithRSAEncryption');
-        verifier.update("{'userId':'5'}");
+        verifier.update('This is the payload');
         verifier.end();
 
-        const isVerified = verifier.verify(publicKey, signatureBuffer, 'base64');
+        const isVerified = verifier.verify(pemKey, signature, 'base64');
         if (!isVerified) {
           throw new Error("Invalid signature");
         }

@@ -122,8 +122,6 @@ module.exports = {
           params: { userId },
         } = req;
 
-        console.log(userId)
-    
         UserModel.deleteUser({ id: userId })
             .then((numberOfEntriesDeleted) => {
                 return res.status(200).json({
