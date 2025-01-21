@@ -83,5 +83,5 @@ module.exports = {
           console.error("Error during biometric login:", error);
           throw error;
       }
-    }
+    },
 };

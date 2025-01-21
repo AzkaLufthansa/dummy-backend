@@ -57,6 +57,7 @@ module.exports = {
 
     login: (req, res) => {
         const { username, password } = req.body;
+        console.log(username, password);
     
         UserModel.findUser({ username })
           .then((user) => {
@@ -195,5 +196,47 @@ module.exports = {
                     error: err,
                 });
             })
-    }
+    },
+
+    verifyPassword: (req, res) => {
+      const { username, password } = req.body;
+      
+      UserModel.findUser({ username })
+         .then((user) => {
+            // IF user is not found with the given username
+            if (!user) {
+              return res.status(400).json({
+                status: false,
+                error: {
+                  message: `Could not find any user with username: \`${username}\`.`,
+                },
+              });
+            }
+    
+            const encryptedPassword = encryptPassword(password);
+    
+            // If Provided password does not match with the one stored in the DB
+            if (user.password !== encryptedPassword) {
+              return res.status(500).json({
+                  status: false,
+                  message: "Password is invalid!",
+                  error: "Password is invalid!",
+              });
+            }
+    
+            return res.status(200).json({
+              status: true,
+              message: "Password is valid!",
+            });
+          })
+         .catch((err) => {
+              return res.status(500).json({
+                  status: false,
+                  message: "Password is invalid!",
+                  error: err,
+              });
+          })
+    },
+
+
 }

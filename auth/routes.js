@@ -26,6 +26,11 @@ router.post(
     AuthController.activateBiometric
 );
 router.post(
+    "/verify_password", 
+    [isAuthenticatedMiddleware.check],
+    AuthController.verifyPassword
+);
+router.post(
     "/biometricLogin", 
     AuthController.biometricLogin
 );
