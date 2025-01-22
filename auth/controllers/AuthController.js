@@ -202,11 +202,15 @@ module.exports = {
         const { userId, signature } = req.body;
         
         UserModel.biometricLogin(userId, signature)
-            .then((result) => {
+        .then((result) => {
+                const accessToken = generateAccessToken(result.username, result.id);
                 return res.status(200).json({
                     status: true,
                     message: "Authentication successful!",
-                    data: result,
+                    data: {
+                      user: result,
+                      token: accessToken
+                    },
                 });
             })
             .catch((err) => {

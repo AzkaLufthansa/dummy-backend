@@ -79,7 +79,7 @@ module.exports = {
 
         // Verify the signature using the public key
         const verifier = crypto.createVerify('sha256WithRSAEncryption');
-        verifier.update('This is the payload');
+        verifier.update(userId.toString());
         verifier.end();
 
         const isVerified = verifier.verify(pemKey, signature, 'base64');
