@@ -223,9 +223,9 @@ module.exports = {
     },
 
     verifyPassword: (req, res) => {
-      const { username, password } = req.body;
+      const { userId, password } = req.body;
       
-      UserModel.findUser({ username })
+      UserModel.findUser({ id: userId })
          .then((user) => {
             // IF user is not found with the given username
             if (!user) {
