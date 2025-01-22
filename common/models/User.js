@@ -1,5 +1,7 @@
 const { DataTypes } = require("sequelize");
 const crypto = require('crypto');
+const { check } = require("../middlewares/IsAuthenticatedMiddleware");
+const { checkBiometric, disableBiometric } = require("../../auth/controllers/AuthController");
 
 const UserModel = {
   id: {
@@ -54,6 +56,13 @@ module.exports = {
     activateBiometric: (query, publicKey) => {
       return this.model.update(
           { public_key: publicKey },
+          { where: query }
+      );
+    },
+
+    disableBiometric: (query) => {
+      return this.model.update(
+          { public_key: null },
           { where: query }
       );
     },

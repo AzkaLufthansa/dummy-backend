@@ -26,6 +26,11 @@ router.post(
     AuthController.activateBiometric
 );
 router.post(
+    "/disableBiometric/:userId", 
+    [isAuthenticatedMiddleware.check],
+    AuthController.disableBiometric
+);
+router.post(
     "/verify_password", 
     [isAuthenticatedMiddleware.check],
     AuthController.verifyPassword
@@ -34,5 +39,10 @@ router.post(
     "/biometricLogin", 
     AuthController.biometricLogin
 );
+router.post(
+    '/check_biometric/:userId', 
+    [isAuthenticatedMiddleware.check],
+    AuthController.checkBiometric
+)
 
 module.exports = router;

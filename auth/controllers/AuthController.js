@@ -178,6 +178,26 @@ module.exports = {
             })
     },
 
+    disableBiometric: (req, res) => {
+        const {
+            params: { userId },
+        } = req;
+
+        UserModel.disableBiometric({ id: userId })
+            .then((result) => {
+                return res.status(200).json({
+                    status: true,
+                    data: result,
+                });
+            })
+            .catch((err) => {
+                return res.status(500).json({
+                    status: false,
+                    error: err,
+                });
+            })
+    },
+
     biometricLogin: (req, res) => {
         const { userId, signature } = req.body;
         
@@ -238,5 +258,31 @@ module.exports = {
           })
     },
 
+    checkBiometric: (req, res) => {
+      const {
+        params: { userId },
+    } = req;
 
+    UserModel.findUser({ id: userId })
+        .then((result) => {
+            if (result.public_key != null) {
+                return res.status(200).json({
+                    status: true,
+                    message: "Biometric enabled!",
+                });
+              } else {
+                return res.status(400).json({
+                    status: true,
+                    message: "Biometric not enabled!",
+                });
+            }
+        })
+        .catch((err) => {
+            return res.status(500).json({
+                status: false,
+                message: "Biometric not enabled!",
+                error: err,
+            });
+        })
+    }
 }
